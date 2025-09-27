@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: "https://translator-ai-white-resonance-7456.fly.dev"
+  apiUrl: "https://translator-ai-api-b2d8emg0eyhkgdfn.brazilsouth-01.azurewebsites.net"
 };
