@@ -1,0 +1,7 @@
+{
+  "/translator": {
+    "target": "http://localhost:7062",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

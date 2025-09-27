@@ -1,0 +1,14 @@
+:host {
+  height: 100px;
+  background-color: rgb(103, 182, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-name {
+ font-size: 20px;
+ display: inline-block;
+ color: white;
+ font-weight: bold;
+}

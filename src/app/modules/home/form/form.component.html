@@ -1,0 +1,9 @@
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <input type="text" formControlName="phrase" />
+  <input type="text" formControlName="language" />
+
+  <button type="submit">Search</button>
+</form>
+
+<app-response-block></app-response-block>
