@@ -1,9 +1,16 @@
-
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <input type="text" formControlName="phrase" />
-  <input type="text" formControlName="language" />
+  <input type="text" formControlName="phrase" placeholder="Type the desired phrase to the translated" />
 
-  <button type="submit">Search</button>
+  <select formControlName="language">
+    <option value="" disabled selected>Select the desired language</option>
+    @for(lang of languages(); track lang.code){
+    <option [value]="lang.code">
+      {{ lang.language }}
+    </option>
+    }
+  </select>
+
+  <button type="submit" [disabled]="!form.valid">Search</button>
 </form>
 
 <app-response-block></app-response-block>

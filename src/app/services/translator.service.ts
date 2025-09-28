@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { GetTranslation } from '../models/GetTranslation';
+import { GetLanguages } from '../models/GetLanguages';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,10 @@ export class TranslatorService {
         responseType: 'text',
       })
       .pipe(tap((res) => this.currentResponse.next(res)));
+  }
 
+  getLanguages(): Observable<GetLanguages[]> {
+    return this.http.get<GetLanguages[]>(`${this.url}/get-languages`);
   }
 
   currentResponseAsObservable(): Observable<string> {
