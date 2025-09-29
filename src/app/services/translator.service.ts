@@ -32,4 +32,8 @@ export class TranslatorService {
   currentResponseAsObservable(): Observable<string> {
     return this.currentResponse.asObservable();
   }
+
+  translateJson(jsonObject: string, lang: string): Observable<string> {
+    throw new Error('Method not implemented.');
+  }
 }

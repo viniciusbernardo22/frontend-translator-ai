@@ -1,16 +1,62 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <input type="text" formControlName="phrase" placeholder="Type the desired phrase to the translated" />
+<div class="tabs-container">
+  <div class="tabs-header">
+    <button
+      class="tab-btn"
+      [class.active]="activeTab() === 'phrase'"
+      (click)="activeTab.set('phrase')"
+    >
+      Phrase Traduction
+    </button>
+    <button
+      class="tab-btn"
+      [class.active]="activeTab() === 'json'"
+      (click)="activeTab.set('json')"
+    >
+      JSON Traduction
+    </button>
+  </div>
 
-  <select formControlName="language">
-    <option value="" disabled selected>Select the desired language</option>
-    @for(lang of languages(); track lang.code){
-    <option [value]="lang.code">
-      {{ lang.language }}
-    </option>
-    }
-  </select>
+  <div class="tabs-content">
+    @if(activeTab() === 'phrase'){
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <input
+        type="text"
+        formControlName="phrase"
+        placeholder="Digite a frase"
+      />
 
-  <button type="submit" [disabled]="!form.valid">Search</button>
-</form>
+      <select formControlName="language">
+        <option value="" disabled selected>Selecione o idioma</option>
+        <option *ngFor="let lang of languages()" [value]="lang.code">
+          {{ lang.language }}
+        </option>
+      </select>
 
-<app-response-block></app-response-block>
+      <button type="submit" [disabled]="!form.valid">Traduzir</button>
+    </form>
+
+    <string-response-block></string-response-block>
+    } @else{
+    <form [formGroup]="jsonForm" (ngSubmit)="onSubmitJson()">
+      <textarea
+        formControlName="jsonInput"
+        placeholder="Cole aqui o JSON"
+      ></textarea>
+
+      <select formControlName="language">
+        <option value="" disabled selected>Selecione o idioma</option>
+        <option *ngFor="let lang of languages()" [value]="lang.code">
+          {{ lang.language }}
+        </option>
+      </select>
+
+      <button type="submit" [disabled]="!jsonForm.valid">Traduzir JSON</button>
+    </form>
+
+    <string-response-block></string-response-block>
+    <!-- <json-response-block
+      [respoi]="'ola'"
+    ></json-response-block> -->
+    aaaa }
+  </div>
+</div>

@@ -1,5 +1,6 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { ResponseBlockComponent } from './response-block/response-block.component';
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormControl,
@@ -7,54 +8,89 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
+import { GetLanguages } from '../../../models/GetLanguages';
 import { GetTranslation } from '../../../models/GetTranslation';
 import { TranslatorService } from '../../../services/translator.service';
-import { GetLanguages } from '../../../models/GetLanguages';
-import { Subject, take } from 'rxjs';
+import { StringResponseBlockComponent } from './string-response-block/response-block.component';
+import { JsonResponseBlockComponent } from './json-response-block/json-response-block.component';
 
 @Component({
   selector: 'app-form',
-  imports: [ResponseBlockComponent, ReactiveFormsModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    StringResponseBlockComponent,
+    JsonResponseBlockComponent,
+  ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css',
-  standalone: true,
 })
 export class FormComponent implements OnInit {
-  builder = inject(FormBuilder);
-  service = inject(TranslatorService);
+  private fb = inject(FormBuilder);
+  private service = inject(TranslatorService);
+  private destroyRef = inject(DestroyRef);
 
   languages = signal<GetLanguages[]>([]);
-  form!: FormGroup;
+  translationResult = signal<GetTranslation | null>(null);
+  jsonTranslationResult = signal<string>('');
+
+  form!: FormGroup<{
+    phrase: FormControl<string | null>;
+    language: FormControl<string | null>;
+  }>;
+  jsonForm!: FormGroup<{
+    jsonInput: FormControl<string | null>;
+    language: FormControl<string | null>;
+  }>;
+
+  activeTab = signal<'phrase' | 'json'>('phrase');
 
   ngOnInit(): void {
-    this.form = this.builder.group({
-      phrase: new FormControl('', Validators.required),
-      language: new FormControl('', Validators.required),
+    this.form = this.fb.group({
+      phrase: this.fb.control('', { validators: [Validators.required] }),
+      language: this.fb.control('', { validators: [Validators.required] }),
     });
 
-    this.getLanguages();
+    this.jsonForm = this.fb.group({
+      jsonInput: this.fb.control('', { validators: [Validators.required] }),
+      language: this.fb.control('', { validators: [Validators.required] }),
+    });
+
+    this.loadLanguages();
   }
 
-  onSubmit() {
-    if (!this.form.valid) return;
-
-    const request = this.form.value as GetTranslation;
+  onSubmit(): void {
+    if (this.form.invalid) return;
+    const request = this.form.getRawValue() as GetTranslation;
 
     this.service
       .getTranslation(request)
-      .pipe(take(1))
-      .subscribe((res) => {
-        console.log(res);
-      });
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
-  getLanguages() {
+  onSubmitJson(): void {
+    if (this.jsonForm.invalid) return;
+
+    try {
+      const jsonObject = JSON.parse(this.jsonForm.value.jsonInput || '{}');
+      const lang = this.jsonForm.value.language!;
+
+      this.service
+        .translateJson(jsonObject, lang)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((res) => this.jsonTranslationResult.set(res));
+    } catch (err) {
+      console.error('JSON inválido', err);
+    }
+  }
+
+  private loadLanguages(): void {
     this.service
       .getLanguages()
-      .pipe(take(1))
-      .subscribe((response) => {
-        this.languages.set(response);
-        console.log(response);
-      });
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => this.languages.set(res));
   }
 }

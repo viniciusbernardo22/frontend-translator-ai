@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResponseBlockComponent } from './response-block.component';
+import { StringResponseBlockComponent } from './response-block.component';
 
 describe('ResponseBlockComponent', () => {
-  let component: ResponseBlockComponent;
-  let fixture: ComponentFixture<ResponseBlockComponent>;
+  let component: StringResponseBlockComponent;
+  let fixture: ComponentFixture<StringResponseBlockComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResponseBlockComponent]
+      imports: [StringResponseBlockComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ResponseBlockComponent);
+    fixture = TestBed.createComponent(StringResponseBlockComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

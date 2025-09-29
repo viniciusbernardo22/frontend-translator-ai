@@ -1,14 +1,15 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { TranslatorService } from '../../../../services/translator.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-response-block',
-  imports: [],
+  selector: 'string-response-block',
+  imports: [JsonPipe],
   templateUrl: './response-block.component.html',
   styleUrl: './response-block.component.css',
   standalone: true,
 })
-export class ResponseBlockComponent implements OnInit {
+export class StringResponseBlockComponent implements OnInit {
   response = signal<string>('');
 
   service = inject(TranslatorService);
