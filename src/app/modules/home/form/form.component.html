@@ -1,4 +1,5 @@
 <div class="tabs-container">
+  <!-- Cabeçalho das abas -->
   <div class="tabs-header">
     <button
       class="tab-btn"
@@ -7,6 +8,7 @@
     >
       Phrase Traduction
     </button>
+
     <button
       class="tab-btn"
       [class.active]="activeTab() === 'json'"
@@ -16,47 +18,13 @@
     </button>
   </div>
 
+  <!-- Conteúdo das abas -->
   <div class="tabs-content">
-    @if(activeTab() === 'phrase'){
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <input
-        type="text"
-        formControlName="phrase"
-        placeholder="Digite a frase"
-      />
+    @if (activeTab() === 'phrase') {
+    <phrase-form [languages]="languages()" />
+    } @else {
 
-      <select formControlName="language">
-        <option value="" disabled selected>Selecione o idioma</option>
-        <option *ngFor="let lang of languages()" [value]="lang.code">
-          {{ lang.language }}
-        </option>
-      </select>
-
-      <button type="submit" [disabled]="!form.valid">Traduzir</button>
-    </form>
-
-    <string-response-block></string-response-block>
-    } @else{
-    <form [formGroup]="jsonForm" (ngSubmit)="onSubmitJson()">
-      <textarea
-        formControlName="jsonInput"
-        placeholder="Cole aqui o JSON"
-      ></textarea>
-
-      <select formControlName="language">
-        <option value="" disabled selected>Selecione o idioma</option>
-        <option *ngFor="let lang of languages()" [value]="lang.code">
-          {{ lang.language }}
-        </option>
-      </select>
-
-      <button type="submit" [disabled]="!jsonForm.valid">Traduzir JSON</button>
-    </form>
-
-    <string-response-block></string-response-block>
-    <!-- <json-response-block
-      [respoi]="'ola'"
-    ></json-response-block> -->
-    aaaa }
+      <json-form [languages]="languages()" />
+    }
   </div>
 </div>

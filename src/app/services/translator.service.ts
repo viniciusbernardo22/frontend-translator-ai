@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { GetLanguages } from '../models/GetLanguages';
 import { HttpClient } from '@angular/common/http';
 import { GetTranslation } from '../models/GetTranslation';
-import { GetLanguages } from '../models/GetLanguages';
 
 @Injectable({
   providedIn: 'root',
@@ -12,28 +11,25 @@ import { GetLanguages } from '../models/GetLanguages';
 export class TranslatorService {
   url = environment.apiUrl + '/translator';
 
-  currentResponse = new BehaviorSubject<string>('');
   constructor(private readonly http: HttpClient) {}
 
-  getTranslation({ phrase, language }: GetTranslation): Observable<string> {
-    const structuredPhase = encodeURIComponent(phrase);
-
-    return this.http
-      .get(`${this.url}/${structuredPhase}/${language}`, {
-        responseType: 'text',
-      })
-      .pipe(tap((res) => this.currentResponse.next(res)));
+  getTranslation(request: GetTranslation): Observable<string> {
+    const structuredPhrase = encodeURIComponent(request.phrase);
+    return this.http.get(
+      `${this.url}/${structuredPhrase}/${request.language}`,
+      { responseType: 'text' }
+    );
   }
 
   getLanguages(): Observable<GetLanguages[]> {
     return this.http.get<GetLanguages[]>(`${this.url}/get-languages`);
   }
 
-  currentResponseAsObservable(): Observable<string> {
-    return this.currentResponse.asObservable();
-  }
-
-  translateJson(jsonObject: string, lang: string): Observable<string> {
-    throw new Error('Method not implemented.');
+  translateJson(jsonObject: any, language: string): Observable<string> {
+    return this.http.post(
+      `${this.url}/translate-json`,
+      { jsonObject: jsonObject, language },
+      { responseType: 'text' }
+    );
   }
 }

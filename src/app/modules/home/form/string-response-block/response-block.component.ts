@@ -1,5 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { TranslatorService } from '../../../../services/translator.service';
+import { Component, input, Input } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 
 @Component({
@@ -9,14 +8,7 @@ import { JsonPipe } from '@angular/common';
   styleUrl: './response-block.component.css',
   standalone: true,
 })
-export class StringResponseBlockComponent implements OnInit {
-  response = signal<string>('');
-
-  service = inject(TranslatorService);
-
-  ngOnInit(): void {
-    this.service
-      .currentResponseAsObservable()
-      .subscribe((res) => this.response.set(res));
-  }
+export class StringResponseBlockComponent {
+  @Input({required: true}) response = '';
+  @Input() isJson = false;
 }

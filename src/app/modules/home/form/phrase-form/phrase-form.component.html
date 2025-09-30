@@ -1,0 +1,18 @@
+<form [formGroup]="phraseForm" (ngSubmit)="onSubmit()">
+  <input type="text" formControlName="phrase" placeholder="Digite a frase" />
+
+  <select formControlName="language">
+    <option value="" disabled selected>Selecione o idioma</option>
+    @for(lang of languages; track lang.code){
+    <option [value]="lang.code">
+      {{ lang.language }}
+    </option>
+    }
+  </select>
+
+  <button type="submit" [disabled]="!phraseForm.valid">Traduzir</button>
+</form>
+
+<string-response-block
+  [response]="phraseTranslationResult()"
+></string-response-block>

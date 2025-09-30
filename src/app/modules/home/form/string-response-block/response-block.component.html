@@ -1,10 +1,18 @@
-@defer(when response()){
+@defer(when response){
 <div class="response-block">
   <div class="response-header">
     <span>Translation</span>
   </div>
+
+  @if(isJson){
   <div class="response-body">
-    {{ response() | json}}
+    <pre>{{ response | json }}</pre>
   </div>
+
+  } @else {
+  <div class="response-body">
+    {{ response }}
+  </div>
+  }
 </div>
 }
